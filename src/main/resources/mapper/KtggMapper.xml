@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spider.mapper.KtggMapper">
+
+    <resultMap id="BaseResultMap" type="com.spider.web.entity.Ktgg" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="fyId" property="fyId" jdbcType="VARCHAR" />
+        <result column="ah" property="ah" jdbcType="VARCHAR" />
+        <result column="ahdm" property="ahdm" jdbcType="VARCHAR" />
+        <result column="ay" property="ay" jdbcType="VARCHAR" />
+        <result column="cbbm" property="cbbm" jdbcType="VARCHAR" />
+        <result column="cbr" property="cbr" jdbcType="VARCHAR" />
+        <result column="yg" property="yg" jdbcType="VARCHAR" />
+        <result column="bg" property="bg" jdbcType="VARCHAR" />
+        <result column="dsr" property="dsr" jdbcType="VARCHAR" />
+        <result column="fymc" property="fymc" jdbcType="VARCHAR" />
+        <result column="ktft" property="ktft" jdbcType="VARCHAR" />
+        <result column="ktrq" property="ktrq" jdbcType="VARCHAR" />
+        <result column="kssj" property="kssj" jdbcType="TIMESTAMP" />
+        <result column="jssj" property="jssj" jdbcType="TIMESTAMP" />
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, fyId, ah, ahdm, ay, cbbm, cbr, yg, bg, dsr, fymc, ktft, ktrq,
+        str_to_date(kssj, '%H:%i:%s') ktks, str_to_date(jssj, '%H:%i:%s') ktjs
+    </sql>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from ktgg;
+    </select>
+
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into ktgg (fyId, ah, ahdm, ay, cbbm, cbr, yg, bg, dsr, fymc, ktft, ktrq, kssj, jssj, createTime)
+        values
+        <foreach collection="list" index="idx" item="item" separator=",">
+            (#{item.fyId}, #{item.ah}, #{item.ahdm}, #{item.ay}, #{item.cbbm}, #{item.cbr}
+            ,#{item.yg}, #{item.bg}, #{item.dsr}, #{item.fymc}, #{item.ktft}
+            ,#{item.ktrq}, #{item.kssj}, #{item.jssj}, #{item.createTime})
+        </foreach>
+    </insert>
+
+    <select id="findByConditions" resultMap="BaseResultMap" parameterType="com.spider.vo.KtggVo">
+        select
+        <include refid="Base_Column_List"></include>
+        from ktgg
+        <where>
+            <if test="ah != null and ah != ''">
+                and ah = #{ah}
+            </if>
+            <if test="ids != null and ids != ''">
+                and id in (${ids})
+            </if>
+        </where>
+        order by ktrq desc, fyId
+    </select>
+    
+</mapper>

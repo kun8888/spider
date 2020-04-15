@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spider.mapper.LogMapper">
+
+    <resultMap id="BaseResultMap" type="com.spider.web.entity.Log" >
+        <id column="id" property="id" jdbcType="INTEGER" />
+        <result column="message" property="message" jdbcType="VARCHAR" />
+        <result column="createTime" property="createTime" jdbcType="TIMESTAMP" />
+    </resultMap>
+
+    <sql id="Base_Column_List" >
+        id, message, tr_to_date(createTime, '%H:%i:%s') cjsj
+    </sql>
+
+    <select id="findAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"></include>
+        from log;
+    </select>
+
+    <insert id="insertData" useGeneratedKeys="true" keyProperty="id" parameterType="com.spider.web.entity.Log">
+        insert into log (message, createTime)
+        values (#{message}, #{createTime})
+    </insert>
+
+    <insert id="batchInsert" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
+        insert into log (message, createTime)
+        values
+        <foreach collection="list" index="idx" item="item" separator=",">
+            (#{item.message}, #{item.createTime})
+        </foreach>
+    </insert>
+
+</mapper>

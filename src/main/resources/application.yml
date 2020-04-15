@@ -1,0 +1,30 @@
+# server
+server:
+  port: 8080
+  servlet:
+    context-path: /spider
+
+# 日志
+logging:
+  file:
+    path: d:/spider
+#    小刚
+#    path: e:/spider
+
+spring:
+  mvc:
+    view:
+      suffix: .html
+
+# 数据源
+  datasource:
+    url: jdbc:mysql://localhost:3306/spider?useUnicode=true&rewriteBatchedStatements=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: '!!!fs888'
+    driver-class-name: com.mysql.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+
+mybatis:
+  mapper-locations: classpath:mapper/*Mapper.xml
+  type-aliases-package: com.spider.web.entity
+
