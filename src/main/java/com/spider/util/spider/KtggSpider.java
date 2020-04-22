@@ -130,6 +130,10 @@ public class KtggSpider {
                         if (ah.indexOf("刑") != -1) {
                             continue;
                         }
+                        // 中院只要有 "初" 的数据
+                        if("320500".equals(fy.getFydm()) && ah.indexOf("初") == -1) {
+                            continue;
+                        }
                         // 只取原告、被告、第三人，且排除个人信息
                         // 格式：上诉人/原告:xxx;被上诉人/被告:xxx;原审被告/第三人:xxx
                         String dsrc = k.getString("dsrc");
@@ -145,23 +149,30 @@ public class KtggSpider {
                             continue;
                         } else {
                             for (String s : dsrc.split(";")) {
-                                String k1 = s.split(":")[0];// 原告/被告/第三人
-                                String v1 = s.split(":")[1];// 原告人名称/被告名称/第三人名称
-                                if (k1.indexOf("原告") != -1) {
-                                    yg1 = v1;
-                                    yg = excludeNatural(v1);
-                                } else if (k1.indexOf("被告") != -1) {
-                                    bg1 = v1;
-                                    bg = excludeNatural(v1);
-                                } else if (k1.indexOf("第三人") != -1) {
-                                    dsr1 = v1;
-                                    dsr = excludeNatural(v1);
+                                try {
+                                    String k1 = s.split(":")[0];// 原告/被告/第三人
+                                    String v1 = s.split(":")[1];// 原告人名称/被告名称/第三人名称
+                                    if (k1.indexOf("原告") != -1) {
+                                        yg1 = v1;
+                                        yg = excludeNatural(v1);
+                                    } else if (k1.indexOf("被告") != -1) {
+                                        bg1 = v1;
+                                        bg = excludeNatural(v1);
+                                    } else if (k1.indexOf("第三人") != -1) {
+                                        dsr1 = v1;
+                                        dsr = excludeNatural(v1);
                                /* } else if (k1.indexOf("上诉") != -1) {
                                     yg1 = v1;
                                     yg = excludeNatural(v1);
                                 } else if (k1.indexOf("被上诉") != -1) {
                                     bg1 = v1;
                                     bg = excludeNatural(v1);*/
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    yg = null;
+                                    bg = null;
+                                    dsr = null;
                                 }
                             }
                         }
